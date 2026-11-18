@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Social Media Study</title>
+    <script src="https://unpkg.com/jspsych@7.3.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-button-response@1.1.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-instructions@1.1.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-survey-html-form@1.0.3"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@1.1.3"></script>
+    <link href="https://unpkg.com/jspsych@7.3.3/css/jspsych.css" rel="stylesheet" type="text/css" />
+    <script src="plugin-html-slider-response.js"></script>
+    <script src="stimuli.js" charset="UTF-8"></script>
+    <script src="sources.js"></script>
+    <script src="stimuli-source_matcher.js"></script>
+
+    <style>
+        .consent {
+            width: 60%;
+            margin: 0 auto;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-size: 1em;
+            text-align: left;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+        /* Page background */
+        body {
+            background-color: #f0f2f5;
+        }
+
+        /* Social media feed */
+        .social-media-feed {
+            font-family:
+                -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+                Cantarell, sans-serif;
+        }
+
+        .social-media-feed .main-container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 20px;
+            padding: 20px;
+            justify-content: center;
+        }
+
+        .social-media-feed .left-sidebar {
+            width: 280px;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .social-media-feed .nav-menu {
+            background-color: white;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-media-feed .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: #050505;
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .social-media-feed .nav-item:hover {
+            background-color: #f0f2f5;
+        }
+
+        .social-media-feed .nav-item.active {
+            background-color: #e7f3ff;
+            color: #1877f2;
+        }
+
+        .social-media-feed .nav-icon {
+            width: 24px;
+            margin-right: 12px;
+            font-size: 20px;
+        }
+
+        .social-media-feed .center-content {
+            flex: 1;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        /* Feed scrollbar */
+        .social-media-feed .center-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .social-media-feed .center-content::-webkit-scrollbar-track {
+            background: #f0f2f5;
+            border-radius: 4px;
+        }
+
+        .social-media-feed .center-content::-webkit-scrollbar-thumb {
+            background: #bcc0c4;
+            border-radius: 4px;
+        }
+
+        .social-media-feed .center-content::-webkit-scrollbar-thumb:hover {
+            background: #8a8d91;
+        }
+
+        .social-media-feed .right-sidebar {
+            width: 280px;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .social-media-feed .search-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-media-feed .search-bar {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #e4e6eb;
+            border-radius: 20px;
+            font-size: 14px;
+            background-color: #f0f2f5;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .social-media-feed .trending-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-media-feed .trending-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #050505;
+            margin-bottom: 15px;
+        }
+
+        .social-media-feed .trending-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #e4e6eb;
+            cursor: pointer;
+        }
+
+        .social-media-feed .trending-item:last-child {
+            border-bottom: none;
+        }
+
+        .social-media-feed .trending-item:hover {
+            opacity: 0.8;
+        }
+
+        .social-media-feed .trending-category {
+            font-size: 12px;
+            color: #65676b;
+            margin-bottom: 2px;
+        }
+
+        .social-media-feed .trending-topic {
+            font-size: 14px;
+            font-weight: 600;
+            color: #050505;
+            margin-bottom: 2px;
+        }
+
+        .social-media-feed .trending-posts {
+            font-size: 12px;
+            color: #65676b;
+        }
+
+        .social-media-feed .post {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .social-media-feed .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .social-media-feed .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 12px;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .social-media-feed .post-author-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .social-media-feed .post-author {
+            font-weight: 600;
+            color: #050505;
+            font-size: 15px;
+            line-height: 1.2;
+        }
+
+        .social-media-feed .post-time {
+            color: #65676b;
+            font-size: 13px;
+            margin-top: 2px;
+            line-height: 1.2;
+        }
+
+        .social-media-feed .post-content {
+            color: #050505;
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .social-media-feed .post-actions {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #e4e6eb;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        /* Hide radio buttons without causing scroll jumps */
+        .social-media-feed .post-actions label {
+            position: relative;
+            display: inline-block;
+        }
+
+        .social-media-feed input[type="radio"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        /* True/false response buttons */
+        .social-media-feed .response-button {
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 50%;
+            font-size: 27px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.5;
+        }
+
+        .social-media-feed .response-button:hover {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+
+        .social-media-feed input[type="radio"]:checked+.response-button {
+            opacity: 1;
+            transform: scale(1.05);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+        }
+
+        .social-media-feed .true-button {
+            background-color: #42b72a;
+            color: white;
+        }
+
+        .social-media-feed .false-button {
+            background-color: #e4304e;
+            color: white;
+        }
+
+        /* Disabled response buttons */
+        .social-media-feed input[type="radio"]:disabled+.response-button {
+            cursor: not-allowed;
+        }
+
+        .social-media-feed input[type="radio"]:disabled:checked+.response-button {
+            opacity: 1;
+        }
+
+        .social-media-feed input[type="radio"]:disabled:not(:checked)+.response-button {
+            opacity: 0.3;
+        }
+
+        /* jsPsych buttons */
+        .jspsych-btn {
+            background-color: #1877f2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-bottom: 40px;
+        }
+
+        .jspsych-btn:hover {
+            background-color: #166fe5;
+        }
+
+        /* Remove default form spacing */
+        .jspsych-content form {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Override jsPsych's min-height while the feed is shown */
+        html:has(.social-media-feed),
+        body.jspsych-display-element:has(.social-media-feed) {
+            min-height: auto !important;
+            height: auto !important;
+        }
+
+        @media (max-width: 1200px) {
+            .social-media-feed .right-sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .social-media-feed .left-sidebar {
+                display: none;
+            }
+
+            .social-media-feed .center-content {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body></body>
+<script>
+    /* ============================================================
+       Conditions and stimulus sampling
+       ============================================================ */
+
+    // Four conditions: quality (normal, low) x quantity (normal, high)
+    var CONDITIONS = {
+        normal_normal: { quality: "normal", quantity: "normal", numFillers: 21 },
+        low_normal: { quality: "low", quantity: "normal", numFillers: 21 },
+        normal_high: { quality: "normal", quantity: "high", numFillers: 42 },
+        low_high: { quality: "low", quantity: "high", numFillers: 42 },
+    };
+
+    // Number of nuclear (target) stimuli, the same in all conditions
+    var NUM_NUCLEAR_STIMULI = 40;
+
+    // Randomly assign the participant to one of the four conditions
+    function assignCondition() {
+        var conditionKeys = Object.keys(CONDITIONS);
+        var randomIndex = Math.floor(Math.random() * conditionKeys.length);
+        return conditionKeys[randomIndex];
+    }
+
+    // Use the low-quality filler text (text_LQ) in the low-quality condition
+    function applyQualityCondition(stimuliArray, qualityCondition) {
+        return stimuliArray.map(function (stimulus) {
+            // Create a copy to avoid mutating original
+            var transformedStimulus = Object.assign({}, stimulus);
+
+            // Only transform filler stimuli (non-nuclear)
+            if (stimulus.topic !== "nuclear") {
+                if (qualityCondition === "low" && stimulus.text_LQ) {
+                    transformedStimulus.text = stimulus.text_LQ;
+                }
+            }
+
+            return transformedStimulus;
+        });
+    }
+
+    // Sample the stimuli and sources for a condition
+    function sampleStimuliForCondition(allStimuli, allSources, condition) {
+        // Separate nuclear and filler stimuli
+        var nuclearStimuli = allStimuli.filter(function (s) {
+            return s.topic === "nuclear";
+        });
+        var fillerStimuli = allStimuli.filter(function (s) {
+            return s.topic !== "nuclear";
+        });
+
+        // Get unique filler topics
+        var fillerTopics = [
+            ...new Set(
+                fillerStimuli.map(function (s) {
+                    return s.topic;
+                }),
+            ),
+        ];
+        var fillersPerTopic = Math.floor(
+            condition.numFillers / fillerTopics.length,
+        );
+
+        // Sample nuclear stimuli equally from each truth x stance group
+        var nuclearGroups = {
+            true_pro: nuclearStimuli.filter(function (s) {
+                return s.truth === "true" && s.stance === "pro";
+            }),
+            true_con: nuclearStimuli.filter(function (s) {
+                return s.truth === "true" && s.stance === "con";
+            }),
+            false_pro: nuclearStimuli.filter(function (s) {
+                return s.truth === "false" && s.stance === "pro";
+            }),
+            false_con: nuclearStimuli.filter(function (s) {
+                return s.truth === "false" && s.stance === "con";
+            }),
+        };
+
+        var perGroup = NUM_NUCLEAR_STIMULI / 4; // 10 per group
+        var sampledNuclear = [];
+
+        for (var group in nuclearGroups) {
+            var sampled = jsPsych.randomization.sampleWithoutReplacement(
+                nuclearGroups[group],
+                Math.min(perGroup, nuclearGroups[group].length),
+            );
+            sampledNuclear = sampledNuclear.concat(sampled);
+        }
+
+        // Sample the same number of fillers from each topic
+        var sampledFillers = [];
+        fillerTopics.forEach(function (topic) {
+            var topicStimuli = fillerStimuli.filter(function (s) {
+                return s.topic === topic;
+            });
+            var sampled = jsPsych.randomization.sampleWithoutReplacement(
+                topicStimuli,
+                Math.min(fillersPerTopic, topicStimuli.length),
+            );
+            sampledFillers = sampledFillers.concat(sampled);
+        });
+
+        // Apply the quality condition to the fillers
+        var transformedFillers = applyQualityCondition(
+            sampledFillers,
+            condition.quality,
+        );
+
+        // Combine sampled stimuli
+        var sampledStimuli = sampledNuclear.concat(transformedFillers);
+
+        // Sample one source per stimulus from the matching topic
+        var neededTopics = [
+            ...new Set(
+                sampledStimuli.map(function (s) {
+                    return s.topic;
+                }),
+            ),
+        ];
+        var topicCounts = {};
+        sampledStimuli.forEach(function (s) {
+            topicCounts[s.topic] = (topicCounts[s.topic] || 0) + 1;
+        });
+
+        var sampledSources = [];
+        neededTopics.forEach(function (topic) {
+            var topicSources = allSources.filter(function (src) {
+                return src.topic === topic;
+            });
+            var needed = topicCounts[topic];
+            var sampled = jsPsych.randomization.sampleWithoutReplacement(
+                topicSources,
+                Math.min(needed, topicSources.length),
+            );
+            sampledSources = sampledSources.concat(
+                sampled.map(function (srcObj) {
+                    return {
+                        topic: topic,
+                        source: srcObj.source,
+                    };
+                }),
+            );
+        });
+
+        return {
+            sampledStimuli: sampledStimuli,
+            sampledSources: sampledSources,
+        };
+    }
+
+    /* ============================================================
+       jsPsych setup and timeline
+       ============================================================ */
+
+    /* Initialize jsPsych */
+    var jsPsych = initJsPsych();
+
+    // capture info from Prolific
+    var subject_id = jsPsych.data.getURLVariable('PROLIFIC_PID');
+    var study_id = jsPsych.data.getURLVariable('STUDY_ID');
+    var session_id = jsPsych.data.getURLVariable('SESSION_ID');
+
+    jsPsych.data.addProperties({
+        subject_id: subject_id,
+        study_id: study_id,
+        session_id: session_id
+    });
+
+    /* Create timeline */
+    var timeline = [];
+
+    /* Welcome page */
+    var welcome = {
+        type: jsPsychInstructions,
+        pages: [
+            `<div style="width:750px;">
+        <p>Welcome. We'll begin by asking you to what degree you agree or disagree with the following statement concerning nuclear energy.</p>
+      </div>`,
+        ],
+        show_clickable_nav: true,
+    };
+    timeline.push(welcome);
+
+    /* Assign participant to condition */
+    var ASSIGNED_CONDITION_KEY = assignCondition();
+    var ASSIGNED_CONDITION = CONDITIONS[ASSIGNED_CONDITION_KEY];
+
+    /* Prior beliefs */
+    var priors = [];
+
+    var prior1 = {
+        type: jsPsychHtmlSliderResponse,
+        stimulus: `<div style="width:500px;">
+        <p>Overall, do you support expanding the production of Nuclear energy?</p>
+      </div>`,
+        min: -100,
+        max: 100,
+        slider_start: 0,
+        slider_number: true,
+        require_movement: true,
+        labels: ["100% Don't support", " ", "100% Support"],
+        data: {
+            task: "prior_beliefs",
+            condition: ASSIGNED_CONDITION_KEY,
+            condition_quality: ASSIGNED_CONDITION.quality,
+            condition_quantity: ASSIGNED_CONDITION.quantity
+        },
+        on_finish: function (data) {
+            priors.push(data.response);
+        },
+    };
+    timeline.push(prior1);
+
+    /* Feed instructions */
+    var feed_instructions = {
+        type: jsPsychInstructions,
+        pages: [
+            `<div style="width:750px; text-align: left;">
+        <p>You will now see a social media feed with several posts. Note that this is a scrollable feed, so you need to scroll down in order to see all posts.</p>
+        <p>For each post, please evaluate whether you think the content is TRUE or FALSE by clicking the appropriate button:</p>
+<p style="text-align: center; margin: 20px 0;">
+  <span style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background-color: #42b72a; color: white; font-size: 18px; font-weight: bold; margin: 0 10px; opacity: 0.5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;">✓</span>
+  <span style="margin-right: 20px;">= TRUE</span>
+  <span style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background-color: #e4304e; color: white; font-size: 18px; font-weight: bold; margin: 0 10px; opacity: 0.5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;">✕</span>
+  <span>= FALSE</span>
+</p>
+        <p><strong>Please scroll through all posts and make a judgment for each post before submitting.</strong></p>
+      </div>`,
+        ],
+        show_clickable_nav: true,
+    };
+    timeline.push(feed_instructions);
+
+    /* Function to generate HTML for a single post */
+    function generatePostHTML(post, index) {
+        return `
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">${post.avatar}</div>
+          <div class="post-author-info">
+            <div class="post-author">${post.author}</div>
+            <div class="post-time">Just now</div>
+          </div>
+        </div>
+        
+        <div class="post-content">
+          ${post.content}
+        </div>
+        
+        <div class="post-actions">
+          <label>
+            <input type="radio" name="post_${index}" value="true" required>
+            <span class="response-button true-button">✓</span>
+          </label>
+          <label>
+            <input type="radio" name="post_${index}" value="false" required>
+            <span class="response-button false-button">✕</span>
+          </label>
+        </div>
+      </div>
+    `;
+    }
+
+    /* Prepare stimuli based on assigned condition */
+    var sampled = sampleStimuliForCondition(
+        stimuli,
+        sources,
+        ASSIGNED_CONDITION,
+    );
+    var stimuliToUse = sampled.sampledStimuli;
+    var sourcesToUse = sampled.sampledSources;
+
+    var preparedStimuli = prepareRandomizedStimuli(stimuliToUse, sourcesToUse);
+
+    // Add attention check stimuli
+    var attentionChecks = [
+        {
+            post_id: "attention_check_true",
+            content: "This is an attention check. Please respond TRUE to this post.",
+            true_value: "true",
+            stance: "neutral",
+            source: "Current Affairs",
+            topic: "attention_check",
+            avatar: "CA",
+            author: "Current Affairs"
+        },
+        {
+            post_id: "attention_check_false",
+            content: "This is an attention check. Please respond FALSE to this post.",
+            true_value: "false",
+            stance: "neutral",
+            source: "Morning Briefing",
+            topic: "attention_check",
+            avatar: "MB",
+            author: "Morning Briefing"
+        }
+    ];
+
+    // Add attention checks to stimuli and shuffle
+    preparedStimuli = preparedStimuli.concat(attentionChecks);
+    preparedStimuli = jsPsych.randomization.shuffle(preparedStimuli);
+
+    var postsHTML = preparedStimuli
+        .map((post, index) => generatePostHTML(post, index))
+        .join("");
+
+    /* Create the feed trial using survey-html-form */
+    var feed_trial = {
+        type: jsPsychSurveyHtmlForm,
+        html: `
+      <div class="social-media-feed">
+        <div class="main-container">
+          <!-- Left Sidebar -->
+          <aside class="left-sidebar">
+            <nav class="nav-menu">
+              <div class="nav-item active">
+                <span class="nav-icon">🏠</span>
+                <span>Home</span>
+              </div>
+              <div class="nav-item">
+                <span class="nav-icon">🔔</span>
+                <span>Notifications</span>
+              </div>
+              <div class="nav-item">
+                <span class="nav-icon">👤</span>
+                <span>Profile</span>
+              </div>
+              <div class="nav-item">
+                <span class="nav-icon">⚙️</span>
+                <span>Settings</span>
+              </div>
+              <div class="nav-item">
+                <span class="nav-icon">🔖</span>
+                <span>Bookmarks</span>
+              </div>
+              <div class="nav-item">
+                <span class="nav-icon">💬</span>
+                <span>Chat</span>
+              </div>
+            </nav>
+          </aside>
+
+          <!-- Center Content with Posts -->
+          <div class="center-content">
+            ${postsHTML}
+          </div>
+
+          <!-- Right Sidebar -->
+          <aside class="right-sidebar">
+            <!-- Search Bar -->
+            <div class="search-container">
+              <input type="text" class="search-bar" placeholder="Search..." />
+            </div>
+
+            <!-- Trending Topics -->
+            <div class="trending-container">
+              <h3 class="trending-title">Trending</h3>
+              
+              <div class="trending-item">
+                <div class="trending-category">Energy · Trending</div>
+                <div class="trending-topic">#Nuclear</div>
+                <div class="trending-posts">12.4K posts</div>
+              </div>
+
+              <div class="trending-item">
+                <div class="trending-category">Technology · Trending</div>
+                <div class="trending-topic">#AI</div>
+                <div class="trending-posts">34.8K posts</div>
+              </div>
+
+              <div class="trending-item">
+                <div class="trending-category">Finance · Trending</div>
+                <div class="trending-topic">#Stocks</div>
+                <div class="trending-posts">18.2K posts</div>
+              </div>
+
+              <div class="trending-item">
+                <div class="trending-category">Health · Trending</div>
+                <div class="trending-topic">#MediterraneanDiet</div>
+                <div class="trending-posts">8.7K posts</div>
+              </div>
+
+              <div class="trending-item">
+                <div class="trending-category">Economics · Trending</div>
+                <div class="trending-topic">#InterestRates</div>
+                <div class="trending-posts">15.3K posts</div>
+              </div>
+
+              <div class="trending-item">
+                <div class="trending-category">Wellness · Trending</div>
+                <div class="trending-topic">#CucumberWater</div>
+                <div class="trending-posts">5.1K posts</div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    `,
+        button_label: "Submit Responses",
+        data: {
+            task: "veracity_judgment_feed",
+            num_fillers: ASSIGNED_CONDITION.numFillers,
+        },
+        on_load: function () {
+            var centerContent = document.querySelector('.social-media-feed .center-content');
+
+            var radioInputs = document.querySelectorAll(
+                '.social-media-feed input[type="radio"]',
+            );
+
+            radioInputs.forEach(function (input) {
+                // Prevent focus-triggered scrolling
+                input.setAttribute('tabindex', '-1');
+
+                var label = input.closest("label");
+                if (label) {
+                    // Keep the scroll position when a response is clicked
+                    label.addEventListener("mousedown", function (e) {
+                        var windowScrollY = window.scrollY;
+                        var centerScrollTop = centerContent ? centerContent.scrollTop : 0;
+
+                        function restoreScroll() {
+                            window.scrollTo({ top: windowScrollY, behavior: 'instant' });
+                            if (centerContent) {
+                                centerContent.scrollTop = centerScrollTop;
+                            }
+                        }
+
+                        // Restore over the next few frames
+                        requestAnimationFrame(restoreScroll);
+                        requestAnimationFrame(function () {
+                            requestAnimationFrame(restoreScroll);
+                        });
+                        // Fallback for Safari
+                        setTimeout(restoreScroll, 0);
+                        setTimeout(restoreScroll, 50);
+                    });
+                }
+
+                // Set custom validation message
+                input.setCustomValidity(
+                    "Please make sure you have responded to every item before submitting your response",
+                );
+
+                // Clear validation message when user makes a selection
+                input.addEventListener("change", function () {
+                    var groupName = this.name;
+                    var groupRadios = document.querySelectorAll(
+                        'input[name="' + groupName + '"]',
+                    );
+                    groupRadios.forEach(function (radio) {
+                        radio.setCustomValidity("");
+                    });
+                });
+            });
+        },
+        on_finish: function (data) {
+            // Get responses from form data
+            var responses = data.response || {};
+            var post_responses = [];
+
+            for (let i = 0; i < preparedStimuli.length; i++) {
+                // Determine stimulus type
+                var stimType;
+                if (preparedStimuli[i].topic === "nuclear") {
+                    stimType = "target";
+                } else if (preparedStimuli[i].topic === "attention_check") {
+                    stimType = "attention_check";
+                } else {
+                    stimType = "filler";
+                }
+
+                post_responses.push({
+                    post_id: preparedStimuli[i].post_id,
+                    true_value: preparedStimuli[i].true_value,
+                    stance: preparedStimuli[i].stance,
+                    source: preparedStimuli[i].source,
+                    topic: preparedStimuli[i].topic,
+                    response: responses["post_" + i],
+                    stimulus_type: stimType,
+                });
+            }
+
+            // Store as JSON strings for the CSV
+            data.post_responses = JSON.stringify(post_responses);
+            data.response = JSON.stringify(responses);
+
+            // Add condition info to this trial's data
+            data.condition = ASSIGNED_CONDITION_KEY;
+            data.condition_quality = ASSIGNED_CONDITION.quality;
+            data.condition_quantity = ASSIGNED_CONDITION.quantity;
+        },
+    };
+
+    timeline.push(feed_trial);
+
+    /* Debrief */
+    var debrief = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<div class="consent">
+            <h2>Debrief</h2>
+            <p>
+                Thank you for participating in this study. The aim of this study was to examine how "noise" 
+                (irrelevant and distracting content) in information environments affects how people evaluate 
+                information that relates to their prior beliefs in specific ways.
+            </p>
+
+            <h3>KEY INFORMATION</h3>
+            <p>
+                <b>Important:</b> During this experiment, you encountered some <b>false claims about nuclear energy</b>. 
+                These claims were generated with AI and were not based on factual evidence.
+            </p>
+            <p>
+                <b>Note:</b> All other posts (about science, technology, AI, lifestyle, health, economics, and markets) 
+                were generated with AI and were not created with truthfulness in mind. These posts served as background 
+                content in the simulated social media environment.
+            </p>
+
+            <h3>Reliable sources about nuclear energy</h3>
+            <p>If you'd like to learn more, the following are trustworthy sources that provide reliable information about nuclear energy:</p>
+            <ul>
+                <li>International Atomic Energy Agency (IAEA): <a target='_blank' href="https://www.iaea.org">https://www.iaea.org</a></li>
+                <li>U.S. Nuclear Regulatory Commission: <a target='_blank' href="https://www.nrc.gov">https://www.nrc.gov</a></li>
+                <li>World Nuclear Association: <a target='_blank' href="https://www.world-nuclear.org">https://www.world-nuclear.org</a></li>
+                <li>Our World in Data: <a target='_blank' href="https://ourworldindata.org/nuclear-energy">https://ourworldindata.org/nuclear-energy</a></li>
+            </ul>
+
+            <h3>Detailed corrections of false claims</h3>
+            <p>Below is a complete list of all false claims you may have encountered during the study, along with explanations of why each claim is false.</p>
+
+            <h4>The following claims <u>supporting</u> nuclear energy were false:</h4>
+
+            <p><b>Nuclear plants have operated completely accident-free for the past 30 years with zero injuries or environmental damage from any incidents.</b></p>
+            <p><em>Why this is false:</em> Major accidents like Fukushima (2011) occurred within this timeframe, resulting in injuries, evacuations, and environmental contamination.</p>
+
+            <p><b>Modern nuclear reactors can be constructed in just 2-3 years, making them among the quickest power plants to deploy.</b></p>
+            <p><em>Why this is false:</em> Nuclear plants typically take 10-15+ years to build. Even the fastest modern reactor projects take at least 5-7 years, making nuclear one of the slowest power sources to deploy, not the quickest.</p>
+
+            <p><b>Nuclear waste becomes harmless after a few decades of storage, eliminating the need for long-term waste management solutions.</b></p>
+            <p><em>Why this is false:</em> High-level nuclear waste remains dangerously radioactive for thousands to millions of years, requiring long-term storage solutions far beyond a few decades.</p>
+
+            <p><b>France eliminated all carbon emissions from its electricity sector after switching to nuclear power in the 1980s, becoming the world's first zero-carbon economy.</b></p>
+            <p><em>Why this is false:</em> While France's electricity sector relies heavily on nuclear power, it has not achieved zero emissions, and France's overall economy still produces significant carbon emissions.</p>
+
+            <p><b>Nuclear reactors can be shut down and restarted within minutes whenever electricity demand changes, just like flipping a light switch.</b></p>
+            <p><em>Why this is false:</em> Nuclear reactors require hours to days to safely shut down or restart, and cannot rapidly adjust output like the claim suggests.</p>
+
+            <p><b>New reactors can completely eliminate existing nuclear waste stockpiles by using them as fuel.</b></p>
+            <p><em>Why this is false:</em> While some advanced reactor designs can partially reprocess waste, no technology can completely eliminate nuclear waste stockpiles.</p>
+
+            <p><b>Nuclear power is the safest energy source ever developed, with fewer than 100 deaths from radiation across all civilian accidents in history.</b></p>
+            <p><em>Why this is false:</em> It is difficult to establish with certainty whether specific deaths (primarily those resulting from cancer) can be attributed to radiation exposure. However, conservative estimates for Chernobyl alone (around 300) already exceed 100 people.</p>
+
+            <p><b>Modern nuclear plants no longer need cooling towers or water for cooling because new reactor designs are completely air-cooled like car engines.</b></p>
+            <p><em>Why this is false:</em> Virtually all nuclear reactors, including modern designs, require water-based cooling systems.</p>
+
+            <p><b>People living near nuclear plants have lower cancer rates than the general population due to stricter environmental monitoring in these areas.</b></p>
+            <p><em>Why this is false:</em> No credible scientific study supports this claim; research has not found lower cancer rates near nuclear plants.</p>
+
+            <p><b>Nuclear electricity has become so cheap that several countries now provide it to their residents free of charge.</b></p>
+            <p><em>Why this is false:</em> No country provides free nuclear electricity to its residents as of 2026.</p>
+
+            <h4>The following claims <u>opposing</u> nuclear energy were false:</h4>
+
+            <p><b>Hospital admission rates for radiation-related illness are significantly higher in communities within 100 miles of nuclear plants compared to the national average.</b></p>
+            <p><em>Why this is false:</em> Multiple large-scale epidemiological studies have found no significant increase in hospital admissions for radiation-related illnesses in communities near nuclear facilities compared to the national average.</p>
+
+            <p><b>The average nuclear plant experiences a major safety incident every few years that gets covered up to avoid public panic.</b></p>
+            <p><em>Why this is false:</em> Major safety incidents at nuclear plants are extremely rare, not occurring every few years, and regulatory bodies closely monitor and publicly report incidents.</p>
+
+            <p><b>Nuclear plants are actually major carbon polluters because they must burn fossil fuels continuously to keep their reactors warm enough to function.</b></p>
+            <p><em>Why this is false:</em> Nuclear reactors do not burn fossil fuels to operate; they generate heat through nuclear fission, not fossil fuel combustion.</p>
+
+            <p><b>Working at nuclear facilities is one of the most dangerous jobs in the energy sector, with thousands of workers dying annually from radiation exposure worldwide.</b></p>
+            <p><em>Why this is false:</em> This death toll is grossly exaggerated. The nuclear industry has strong safety records, with very few radiation-related worker deaths annually. Nuclear energy actually has one of the lowest occupational fatality rates in the energy sector.</p>
+
+            <p><b>Nuclear waste storage sites leak radioactive material into groundwater at most U.S. facilities, contaminating drinking water for millions.</b></p>
+            <p><em>Why this is false:</em> While some sites have experienced leaks, the claim that most facilities leak is not supported by evidence. Most nuclear waste storage sites maintain containment integrity, and widespread contamination of drinking water for millions is not documented.</p>
+
+            <p><b>Radiation pollution from nuclear plants creates permanent dead zones in surrounding waterways where no aquatic life can survive.</b></p>
+            <p><em>Why this is false:</em> The claim conflates radiation with thermal discharge. Nuclear plants release minimal radiation into waterways, but they do release warm cooling water, which can affect local aquatic ecosystems. However, "permanent dead zones" greatly exaggerates the impact of this.</p>
+
+            <p><b>The Chernobyl disaster released massive amounts of radiation, with scientists estimating the eventual death toll could reach hundreds of thousands of people due to long-term cancer effects.</b></p>
+            <p><em>Why this is false:</em> While Chernobyl was catastrophic, the claim of hundreds of thousands of deaths is at the extreme high end of estimates. Most scientific estimates from organizations like the WHO place the total attributable deaths significantly lower.</p>
+
+            <p><b>Most nuclear reactors are at extreme risk of failure because they are operating far beyond their originally intended design lifespan.</b></p>
+            <p><em>Why this is false:</em> While some reactors operate beyond their original design life, they undergo rigorous safety reviews for license extensions. Regulatory bodies only approve extensions when safety standards are met, and the claim about extreme risk is not supported by evidence.</p>
+
+            <p><b>Nuclear plants consume more than half of the electricity they generate just to run their own cooling systems and safety equipment, resulting in far less net power than initial output suggests.</b></p>
+            <p><em>Why this is false:</em> Nuclear plants typically use only 5-10% of their generated electricity for internal operations including cooling and safety systems. They deliver the vast majority of their output to the grid.</p>
+
+            <p><b>Children born near nuclear facilities have triple the normal rate of birth defects and developmental disorders from chronic radiation exposure.</b></p>
+            <p><em>Why this is false:</em> Scientific studies have found no evidence of elevated birth defects or developmental disorders in populations living near properly operating nuclear facilities.</p>
+
+            <p><br /><b>Thank you again for your participation. In order to be given your Prolific completion code, please click the 'Finish' button below. </b></p>
+        </div>`,
+        choices: ["Finish"],
+    };
+    timeline.push(debrief);
+
+    /* Completion code */
+    var qwerty1234 = {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: `<div style="width:800px;">
+            <p>Thank you for taking part in this experiment! You can click the link below to confirm your completion with Prolific:</p>
+      <a target='_blank'
+          href="https://app.prolific.com/submissions/complete?cc=PLACEHOLDER"
+          >https://app.prolific.com/submissions/complete?cc=PLACEHOLDER</a
+        ></div>`,
+        choices: "NO_KEYS"
+    };
+    timeline.push(qwerty1234);
+
+    /* Start the experiment */
+    jsPsych.run(timeline);
+</script>
+
+</html>
